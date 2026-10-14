@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexusOps // Gaming Research Task Tracker</title>
+  <meta name="description" content="Cyberpunk-inspired Task Tracker & Lab Notebook for Gaming Research, Game Design, Mechanics Analysis, and Engine Profiling.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="theme-dark">
+  <!-- Cyber Background FX -->
+  <div class="ambient-glow glow-cyan"></div>
+  <div class="ambient-glow glow-purple"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Main Container -->
+  <div class="app-layout">
+    <!-- Top Navigation / HUD Bar -->
+    <header class="app-header">
+      <div class="header-branding">
+        <div class="brand-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title-wrap">
+            <h1 class="brand-title">NEXUS<span>//</span>OPS</h1>
+            <span class="brand-badge">RESEARCH LAB v1.0</span>
+          </div>
+          <p class="brand-subtitle">Interactive Gaming Mechanics & Engine Research Tracker</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="btnResetSeed" class="btn btn-ghost" title="Reset to sample gaming research studies">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M8 16H3v5"></path></svg>
+          Reset Demo
+        </button>
+        <button id="btnExportData" class="btn btn-outline" title="Export research data as JSON">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export
+        </button>
+        <button id="btnNewTask" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          New Research Study
+        </button>
+      </div>
+    </header>
+
+    <!-- KPI / Statistics Banner -->
+    <section class="stats-banner" id="statsBanner">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">TOTAL STUDIES</span>
+          <span class="stat-dot dot-cyan"></span>
+        </div>
+        <div class="stat-value" id="statTotal">--</div>
+        <div class="stat-footer" id="statGamesCount">-- Target Games</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">ACTIVE LAB WORK</span>
+          <span class="stat-dot dot-purple"></span>
+        </div>
+        <div class="stat-value" id="statActive">--</div>
+        <div class="stat-footer" id="statActiveSub">In-Progress & Testing</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">HOURS INVESTED</span>
+          <span class="stat-dot dot-amber"></span>
+        </div>
+        <div class="stat-value" id="statHours">--</div>
+        <div class="stat-footer" id="statHoursEst">Est: -- hrs</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-label">COMPLETION RATE</span>
+          <span class="stat-dot dot-green"></span>
+        </div>
+        <div class="stat-value" id="statRate">--%</div>
+        <div class="stat-progress-bar">
+          <div class="stat-progress-fill" id="statProgressFill" style="width: 0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Control Bar: Search, Filters & View Toggle -->
+    <section class="controls-panel">
+      <div class="search-box">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" placeholder="Search hypothesis, games, tags, findings..." autocomplete="off">
+        <button id="btnClearSearch" class="btn-clear" style="display: none;">&times;</button>
+      </div>
+
+      <div class="filters-row">
+        <!-- Game Filter -->
+        <div class="filter-group">
+          <label for="filterGame">Game</label>
+          <select id="filterGame" class="select-cyber">
+            <option value="all">All Games</option>
+          </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-group">
+          <label for="filterCategory">Category</label>
+          <select id="filterCategory" class="select-cyber">
+            <option value="all">All Disciplines</option>
+          </select>
+        </div>
+
+        <!-- Priority Filter -->
+        <div class="filter-group">
+          <label for="filterPriority">Priority</label>
+          <select id="filterPriority" class="select-cyber">
+            <option value="all">All Priorities</option>
+            <option value="critical">Critical</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+        </div>
+
+        <!-- Sort By -->
+        <div class="filter-group">
+          <label for="sortBy">Sort</label>
+          <select id="sortBy" class="select-cyber">
+            <option value="updated">Recently Updated</option>
+            <option value="priority">Priority</option>
+            <option value="hours">Hours Logged</option>
+            <option value="game">Game Title</option>
+          </select>
+        </div>
+
+        <!-- View Switcher -->
+        <div class="view-switch-group">
+          <button id="viewBoardBtn" class="btn-view active" title="Kanban Board View">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="18" rx="1"></rect><rect x="14" y="3" width="7" height="18" rx="1"></rect></svg>
+            Board
+          </button>
+          <button id="viewListBtn" class="btn-view" title="List Table View">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            List
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Workspace Container -->
+    <main class="workspace-area">
+      <!-- Board / Kanban View -->
+      <div id="boardView" class="board-container">
+        <!-- Backlog Column -->
+        <div class="kanban-col" data-status="backlog">
+          <div class="col-header col-backlog">
+            <div class="col-title-wrap">
+              <span class="status-indicator"></span>
+              <h2 class="col-title">BACKLOG / HYPOTHESIS</h2>
+            </div>
+            <span class="col-count" id="countBacklog">0</span>
+          </div>
+          <div class="col-tasks" id="tasksBacklog"></div>
+        </div>
+
+        <!-- In-Progress Column -->
+        <div class="kanban-col" data-status="in-progress">
+          <div class="col-header col-progress">
+            <div class="col-title-wrap">
+              <span class="status-indicator"></span>
+              <h2 class="col-title">IN PROGRESS / DISSECTION</h2>
+            </div>
+            <span class="col-count" id="countInProgress">0</span>
+          </div>
+          <div class="col-tasks" id="tasksInProgress"></div>
+        </div>
+
+        <!-- Testing / Lab Column -->
+        <div class="kanban-col" data-status="testing">
+          <div class="col-header col-testing">
+            <div class="col-title-wrap">
+              <span class="status-indicator"></span>
+              <h2 class="col-title">BENCHMARK / TESTING</h2>
+            </div>
+            <span class="col-count" id="countTesting">0</span>
+          </div>
+          <div class="col-tasks" id="tasksTesting"></div>
+        </div>
+
+        <!-- Completed / Documented Column -->
+        <div class="kanban-col" data-status="completed">
+          <div class="col-header col-completed">
+            <div class="col-title-wrap">
+              <span class="status-indicator"></span>
+              <h2 class="col-title">DOCUMENTED / COMPLETE</h2>
+            </div>
+            <span class="col-count" id="countCompleted">0</span>
+          </div>
+          <div class="col-tasks" id="tasksCompleted"></div>
+        </div>
+      </div>
+
+      <!-- List / Table View (hidden by default) -->
+      <div id="listView" class="list-container" style="display: none;">
+        <div class="table-responsive">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Research Topic</th>
+                <th>Target Game</th>
+                <th>Category</th>
+                <th>Hours</th>
+                <th>Tags</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="listTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <div class="empty-icon">🎮</div>
+        <h3>No Research Studies Found</h3>
+        <p>No research tasks match your current filter parameters or search query.</p>
+        <button id="btnClearFilters" class="btn btn-outline">Clear All Filters</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Task Detail Modal -->
+  <div id="detailModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-window modal-lg">
+      <div class="modal-header">
+        <div class="modal-meta-top">
+          <span class="game-pill" id="detailGame"></span>
+          <span class="category-pill" id="detailCategory"></span>
+          <span class="priority-badge" id="detailPriority"></span>
+          <span class="status-badge" id="detailStatus"></span>
+        </div>
+        <button class="modal-close" id="btnDetailClose">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <h2 class="detail-title" id="detailTitle"></h2>
+        
+        <div class="detail-stats-grid">
+          <div class="detail-stat-item">
+            <span class="detail-stat-lbl">LOGGED HOURS</span>
+            <span class="detail-stat-val" id="detailLoggedHours">0 hrs</span>
+          </div>
+          <div class="detail-stat-item">
+            <span class="detail-stat-lbl">ESTIMATED</span>
+            <span class="detail-stat-val" id="detailEstHours">0 hrs</span>
+          </div>
+          <div class="detail-stat-item">
+            <span class="detail-stat-lbl">LAST UPDATED</span>
+            <span class="detail-stat-val" id="detailUpdatedAt">-</span>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="detail-section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Research Hypothesis / Objective
+          </h4>
+          <div class="detail-card-content" id="detailHypothesis"></div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="detail-section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Key Findings & Technical Notes
+          </h4>
+          <div class="detail-card-content" id="detailFindings"></div>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="detail-section-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+            References & Technical Sources
+          </h4>
+          <ul class="detail-references-list" id="detailReferences"></ul>
+        </div>
+
+        <div class="detail-section">
+          <h4 class="detail-section-title">Tags & Classification</h4>
+          <div class="tags-container" id="detailTags"></div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button id="btnDetailDelete" class="btn btn-danger">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Delete Study
+        </button>
+        <div class="footer-right">
+          <button id="btnDetailEdit" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Edit Study
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create / Edit Task Modal -->
+  <div id="formModal" class="modal-backdrop" style="display: none;">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h3 class="modal-title" id="formModalTitle">NEW RESEARCH STUDY</h3>
+        <button class="modal-close" id="btnFormClose">&times;</button>
+      </div>
+
+      <form id="taskForm" class="modal-body form-grid">
+        <input type="hidden" id="formTaskId">
+
+        <div class="form-group full-width">
+          <label for="formTitle">Study Title / Research Question <span class="required">*</span></label>
+          <input type="text" id="formTitle" class="form-control" placeholder="e.g. Boss Aggro Pacing & Stagger Window Analysis" required>
+        </div>
+
+        <div class="form-group">
+          <label for="formGame">Target Game Title <span class="required">*</span></label>
+          <input type="text" id="formGame" class="form-control" placeholder="e.g. Elden Ring, Hades II, Valorant" required list="gameSuggestions">
+          <datalist id="gameSuggestions"></datalist>
+        </div>
+
+        <div class="form-group">
+          <label for="formCategory">Research Discipline</label>
+          <select id="formCategory" class="form-control select-cyber">
+            <option value="AI & Combat Mechanics">AI & Combat Mechanics</option>
+            <option value="Engine & Graphics">Engine & Graphics</option>
+            <option value="Physics & Mechanics">Physics & Mechanics</option>
+            <option value="Game Economy & Balance">Game Economy & Balance</option>
+            <option value="Narrative & Worldbuilding">Narrative & Worldbuilding</option>
+            <option value="Multiplayer & Netcode">Multiplayer & Netcode</option>
+            <option value="Audio & Sound Design">Audio & Sound Design</option>
+            <option value="UX & Player Psychology">UX & Player Psychology</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="formStatus">Research Status</label>
+          <select id="formStatus" class="form-control select-cyber">
+            <option value="backlog">Backlog / Hypothesis</option>
+            <option value="in-progress">In Progress / Dissection</option>
+            <option value="testing">Benchmark / Testing</option>
+            <option value="completed">Documented / Complete</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="formPriority">Priority Level</label>
+          <select id="formPriority" class="form-control select-cyber">
+            <option value="critical">Critical (P0 - Deep Blocker/Core)</option>
+            <option value="high">High (P1 - Priority Analysis)</option>
+            <option value="medium" selected>Medium (P2 - Standard Study)</option>
+            <option value="low">Low (P3 - Peripheral Curiosity)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="formLoggedHours">Hours Logged</label>
+          <input type="number" id="formLoggedHours" class="form-control" step="0.5" min="0" value="0">
+        </div>
+
+        <div class="form-group">
+          <label for="formEstHours">Estimated Hours</label>
+          <input type="number" id="formEstHours" class="form-control" step="0.5" min="0" value="4">
+        </div>
+
+        <div class="form-group full-width">
+          <label for="formHypothesis">Hypothesis & Objective</label>
+          <textarea id="formHypothesis" class="form-control" rows="3" placeholder="What are you testing, measuring, or deconstructing?"></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="formFindings">Findings, Technical Insights & Conclusions</label>
+          <textarea id="formFindings" class="form-control" rows="3" placeholder="Documented frame timings, memory footprints, logic trees, or conclusions..."></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="formReferences">References & Sources (one per line or URL)</label>
+          <textarea id="formReferences" class="form-control" rows="2" placeholder="https://gdc.gdconf.com/...&#10;GDC Vault: Talk on Game Physics"></textarea>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="formTags">Tags (comma-separated)</label>
+          <input type="text" id="formTags" class="form-control" placeholder="e.g. soulslike, ai, frame-data, physics">
+        </div>
+
+        <div class="modal-footer full-width">
+          <button type="button" class="btn btn-ghost" id="btnFormCancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnFormSubmit">Save Study</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- App Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+import { Milestone } from '../types';
+
+export const INITIAL_MILESTONES: Omit<Milestone, 'isCompleted' | 'completedDate'>[] = [
+  {
+    id: 'M1',
+    code: 'Milestone M1',
+    title: 'Development Environment Ready',
+    phase: 'P0',
+    description: 'Foundational development tools, Unreal Engine 5.6, Blender automation, Python environment, testing suite, and data models fully configured and operational.',
+    targetDate: '2026-10-25',
+  },
+  {
+    id: 'M2',
+    code: 'Milestone M2',
+    title: 'Asset Analyzer Complete',
+    phase: 'P1',
+    description: 'Automated 3D mesh import, geometry parsing, texture/material/UV/topology extraction, and structured JSON report generation verified across benchmark assets.',
+    targetDate: '2026-11-10',
+  },
+  {
+    id: 'M3',
+    code: 'Milestone M3',
+    title: 'Optimization Modules Complete',
+    phase: 'P2',
+    description: 'All five core optimization techniques implemented (Mesh Simplification, Topology Cleanup, LOD Generation, Texture Resolution, Texture Compression) with candidate export.',
+    targetDate: '2026-11-28',
+  },
+  {
+    id: 'M4',
+    code: 'Milestone M4',
+    title: 'Unreal Integration Complete',
+    phase: 'P3',
+    description: 'Unreal Python automation, automated FBX import, dynamic Static Mesh Actor replacement, in-scene camera testing, and automated rollback workflows validated.',
+    targetDate: '2026-12-15',
+  },
+  {
+    id: 'M5',
+    code: 'Milestone M5',
+    title: 'Automated Evaluation Complete',
+    phase: 'P4',
+    description: 'Repeatable Unreal CSV performance captures, frame time & FPS analysis, GPU timing, texture memory evaluation, SSIM/LPIPS visual comparison, and report generation.',
+    targetDate: '2027-01-10',
+  },
+  {
+    id: 'M6',
+    code: 'Milestone M6',
+    title: 'Non-Agentic Pipeline Complete',
+    phase: 'P5',
+    description: 'End-to-end non-agentic pipeline operating with experiment orchestrator, fixed optimization policies, rule-based adaptive policies, budget enforcement, and failure handling.',
+    targetDate: '2027-01-30',
+  },
+  {
+    id: 'M7',
+    code: 'Milestone M7',
+    title: 'AI Agent Integrated',
+    phase: 'P6',
+    description: 'Autonomous optimization decision-making operational with LLM provider integration, tool execution, performance feedback loop, optimization memory, and stopping conditions.',
+    targetDate: '2027-02-20',
+  },
+  {
+    id: 'M8',
+    code: 'Milestone M8',
+    title: 'Research Experiments Complete',
+    phase: 'P7',
+    description: 'Comprehensive research dataset benchmarks, baseline comparisons, agentic optimization experiments, statistical analysis, and final research thesis deliverables completed.',
+    targetDate: '2027-03-20',
+  },
+];
